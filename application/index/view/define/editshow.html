@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/admin-all.css" />
+    <link rel="stylesheet" type="text/css" href="/css/jquery-ui-1.8.22.custom.css" />
+    <script type="text/javascript" src="/css/jquery-ui-1.8.22.custom.min.js"></script>
+    <script src="/static/lib/layui-master/dist/layui.js"></script>
+    <link rel="stylesheet" href="/static/lib/layui-master/dist/css/layui.css"/>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+</head>
+<script>
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+            ,confirm = layui.confirm
+            ,form=layui.form;
+        $("input[id='sec']").attr('readonly',true);
+        // form.render();
+        form.on('checkbox', function(data){
+            //确认取消了一个一级功能点的选择
+            if (!(data.elem.checked)){
+                console.log('确认取消')
+                if (data.elem.id=='frt'){
+                    console.log('确认取消了一个一级功能点的选择')
+                    a='.'+data.value
+                    $(a).hide()
+                    form.render()
+                }
+            }
+            //确认选中了一个一级功能点
+            else if(data.elem.checked==true){
+                if (data.elem.id=='frt'){
+                    console.log('确认选中了一个一级功能点')
+                    a='.'+data.value
+                    b=a+'>input'
+                    $(a).show()
+                    $("input[id='sec']").css({"display":"none"})
+                    $(b).prop('checked',false)
+                    form.render();
+                }
+            }
+            else{
+                $("input:checkbox:checked").prop('checked',false)
+                layer.msg('请先选择自定义权限')
+                form.render();
+            }
+
+            console.log(data.elem.id); //得到checkbox原始DOM对象
+            console.log(data.elem.checked); //是否被选中，true或者false
+            console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+            console.log(data.othis); //得到美化后的DOM对象
+        });
+        form.on('select',function (data) {
+            console.log(data.elem); //得到select原始DOM对象
+            console.log(data.value); //得到被选中的值
+            console.log(data.othis); //得到美化后的DOM对象
+            if (data.value==11){
+                $(".diy-auth").show();
+                form.render();
+            }else{
+                console
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $(".diy-auth").hide();
+        $("div[id='secmod']").hide();
+        // console.log()
+        $("#confirm").click(function (obj) {
+            layer.confirm('请确认以上就是该权限的权限范围', {icon: 0, title:'确认'}, function(index){
+                $("input[id='frt']:checkbox:not(:checked)").each(function (index, item) {
+                    frt.push($(this).val());
+                    $('.allfrt').val(frt.join(","))
+                });
+                $("input[id='sec']:checkbox:not(:checked)").each(function (index, item) {
+                    sec.push($(this).val());
+                    $('.allsec').val(sec.join(","))
+                });
+                console.log(frt.join(","));
+                console.log(sec.join(","));
+                layer.close(index);
+            })
+        })
+    })
+</script>
+<script>
+        function showCustomer(str)
+        {
+          var xmlhttp;    
+          if (str=="")
+          {
+            document.getElementById("txtHint").innerHTML="";
+            return;
+          }
+          if (window.XMLHttpRequest)
+          {
+            // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp=new XMLHttpRequest();
+          }
+          else
+          {
+            // IE6, IE5 浏览器执行代码
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          xmlhttp.onreadystatechange=function()
+          {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+              document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+            }
+          }
+          xmlhttp.open("GET","userclassmore?q="+str,true);
+          xmlhttp.send();
+        }
+        </script>
+        <script>
+            layui.use(['layer', 'form'], function() {
+                var layer = layui.layer
+                    , confirm = layui.confirm
+                    , form = layui.form;
+                form.render();
+            })
+        </script>
+<body>
+    <div class="layui-form">
+    <table class="table table-striped table-bordered table-condensed list layui-table" lay-skin="nob">
+        <thead>
+            <tr>
+                <td colspan="6"><b>用户基本信息</b></td>
+            </tr>
+        </thead>
+         
+        <form method="post" action="editshowrun">
+        <tbody>
+            <tr>
+                <td>用户编号</td>
+                <td colspan="5">{$data.u_id}<input name="u_id" value="{$data.u_id}" type="hidden"/></td>
+            </tr>
+            <tr>
+                <td >用户名：<font color="FF0000">*</font></td>
+                <td >
+                    <input name="username" value="{$data.username}" type="text" readonly placeholder="10位内非汉字且不能包含非法字符"/>
+                </td>
+                <td >姓名：<font color="FF0000">*</font></td>
+                <td >
+                    <input name="u_name" value="{$data.u_name}" type="text" placeholder="5位内姓名或学生组织名，全汉字"/></td>
+                <td >性别：<font color="FF0000">*</font></td>
+                <td >
+                      <select name="u_sex">
+                        <option value="{$data.u_sex}">当前：{$data.u_sex}</option>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                    
+            </tr>
+            <tr>
+                <td >身份证号码：<font color="FF0000">*</font></td>
+                <td >
+                    <input name="user_id" value="{$data.user_id}" type="text" placeholder="18位全数字，最后一位可为X"/>
+                </td>
+                <td >所属单位：<font color="FF0000">*</font></td>
+                <td >
+                    <select name="u_class" onchange="showCustomer(this.value)">
+                        <option value="{$data.u_class}">当前：{$data.userinfo}</option>
+                        <option value="2">部门/单位</option>
+                        <option value="1">二级学院</option>
+                    </select></td>
+                    <td >所属单位名称：<font color="FF0000">*</font></td>
+                    <td>
+                        <select name="u_classinfo" id="txtHint">
+                        <option value="{$data.u_classinfo}">当前：{$data.collegeinfo}</option>
+                            
+                        </select>
+                        
+                        </td>
+            </tr>
+            <tr>
+                <td >手机号码：<font color="FF0000">*</font></td>
+                <td >
+                    <input name="add" value="{$data.add}" type="text" placeholder="11位全数字"/>
+                </td>
+                <td >邮箱地址：</td>
+                <td >
+                    <input name="u_mail" value="{$data.u_mail}" type="text" placeholder="邮箱格式"/></td>
+                <td >QQ号码：</td>
+                <td >
+                    <input name="qq" value="{$data.qq}" type="text" placeholder="仅支持5-11位全数字"/></td>
+            </tr>
+            <tr>
+                <td >微信号码：</td>
+                <td >
+                    <input name="vx" value="{$data.vx}" type="text" placeholder='支持字母、数字、"—"和"_"组合"'/>
+                </td>
+                <td >账号状态：<font color="FF0000">*</font></td>
+                <td >
+                <select name="state">
+                        <option value="{$data.state}">当前：{$data.stateinfo}</option>
+                        <option value="1">启用</option>
+                        <option value="2">停用</option>
+                    </select>    
+                </td>
+                <td >账号权限：<font color="FF0000">*</font></td>
+                <td >
+                    <select name="jurisdiction">
+                        <option value="{$data.jurisdiction}">当前：{$data.jurisdictioninfo}</option>
+                        <option value="2">学工处</option>
+                        <option value="3">校团委</option>
+                        <option value="4">分院院长</option>
+                        <option value="5">分院团总支书记</option>
+                        <option value="6">分院辅导员</option>
+<!--                        <option value="7">学生组织(院级)</option>-->
+<!--                        <option value="8">学生组织(校级)</option>-->
+                        <option value="1">系统维护账号(请谨慎分配此权限账号)</option>
+<!--                        <option value="11">自定义权限</option>-->
+                    </select>
+                    </td>
+            </tr>
+            <tr>
+                <td >所在班级：<font color="FF0000">*</font></td>
+                <td >
+                    <input name="" value="{$data3}" type="text" placeholder='支持字母、数字、"—"和"_"组合"' readonly/>
+                </td>
+            </tr>
+            <tr class="diy-auth">
+                <td >账号权限：<font color="FF0000">*</font></td>
+                <td >
+                    <select name="jurisdiction">
+                        <option value="{$data.jurisdiction}">当前：{$data.jurisdictioninfo}</option>
+                        <option value="2">学工处</option>
+                        <option value="3">校团委</option>
+                        <option value="4">分院院长</option>
+                        <option value="5">分院团总支书记</option>
+                        <option value="6">分院辅导员</option>
+                        <!--                        <option value="7">学生组织(院级)</option>-->
+                        <!--                        <option value="8">学生组织(校级)</option>-->
+                        <option value="1">系统维护账号(请谨慎分配此权限账号)</option>
+                        <!--                        <option value="11">自定义权限</option>-->
+                    </select>
+                </td>
+                <td >权限选择：<font color="FF0000">*</font></td>
+                <td>
+                    <div>
+                        <div style="margin:10px 0">
+                            <input class="statu" id="frt" name="state" type="checkbox" value="Person" title="一级：个人管理" />
+                        </div>
+                        <div id="secmod" class="Person" style="margin:10px 0">
+                            <input name="state" id="sec" class="Person" type="checkbox" value="P1" style="display: none" title="二级：个人信息" />
+                            <input name="state" id="sec" class="Person" type="checkbox" value="P2" title="二级：修改密码" />
+                            <input name="state" id="sec" class="Person" type="checkbox" value="P3" title="二级：个人操作日志" />
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin:10px 0">
+                            <input id="frt" name="state" type="checkbox" value="Stu" title="一级：学生管理" />
+                        </div>
+                        <div id="secmod" class="Stu" style="margin:10px 0" >
+                            <input name="state" id="sec" class="Stu" type="checkbox" value="S1" title="二级：添加学生"  />
+                            <input name="state" id="sec" class="Stu" type="checkbox" value="S2" title="二级：批量添加学生" />
+                            <input name="state" id="sec" class="Stu" type="checkbox" value="S3" title="二级：学生检查" />
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin:10px 0">
+                            <input id="frt" name="state" type="checkbox" value="Userr" title="一级：用户管理" />
+                        </div>
+                        <div id="secmod" class="Userr" style="margin:10px 0" >
+                            <input name="state" id="sec" type="checkbox" value="U1" title="二级：添加用户" />
+                            <input name="state" id="sec" type="checkbox" value="U2" title="二级：批量添加用户" />
+                            <input name="state" id="sec" type="checkbox" value="U3" title="二级：批量添加寝室" />
+                            <input name="state" id="sec" type="checkbox" value="U4" title="二级：查看用户" />
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin:10px 0">
+                            <input name="state" id="frt" type="checkbox" value="Score" title="一级：学分操作" />
+                        </div>
+                        <div id="secmod" class="Score" style="margin:10px 0" >
+                            <input name="state" id="sec" type="checkbox" value="SC1" title="二级：学分操作" />
+                            <input name="state" id="sec" type="checkbox" value="SC2" title="二级：待审核操作" />
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin:10px 0">
+                            <input name="state" id="frt" type="checkbox" value="Sparam" title="一级：系统参数设置" />
+                        </div>
+                        <div id="secmod" class="Sparam" style="margin:10px 0" >
+                            <input name="state" id="sec" type="checkbox" value="SP1" title="二级：学分操作管理" />
+                            <input name="state" id="sec" type="checkbox" value="SP2" title="二级：部门/单位信息管理" />
+                            <input name="state" id="sec" type="checkbox" value="SP3" title="二级：班级信息管理" />
+                            <div id="secmod" class="Sparam" style="margin:10px 0">
+                                <input name="state" id="sec" type="checkbox" value="SP4" title="二级：公寓信息管理" />
+                                <input name="state" id="sec" type="checkbox" value="SP5" title="二级：辅导员信息管理" />
+                                <input name="state" id="sec" type="checkbox" value="SP6" title="二级：专业信息管理" />
+                                <input name="state" id="sec" type="checkbox" value="SP7" title="二级：学院信息管理" />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin:10px 0">
+                            <input name="state" id="frt" type="checkbox" value="Logs" title="一级：日志管理" />
+                        </div>
+                        <div id="secmod" class="Logs" style="margin:10px 0">
+                            <input name="state" id="sec" type="checkbox" value="L1" title="二级：系统操作日志" />
+                            <input name="state" id="sec" type="checkbox" value="L2" title="二级：学分操作日志" />
+                        </div>
+                    </div>
+                    <input id='confirm' class="layui-btn layui-btn-normal" value="确认" />
+                </td>
+            </tr>
+            <tr></tr>
+        </tbody>
+            <tfoot>
+        </tbody>
+            <input type="hidden" value="123456" name="password" ></input>
+            <input type="hidden" value="" name="allfrt" class="allfrt" ></input>
+            <input type="hidden" value="" name="allsec" class="allsec"></input>
+        <tfoot>
+            <tr>
+                <td colspan="6">
+<!--                    <a href="help" class="btn btn-inverse">保存</a>-->
+                    <input class="layui-btn layui-btn-normal" id="find" type="submit" value="保存" />
+                    <input class="layui-btn layui-btn-normal" id="try" type="button" value="刷新" onclick="location.reload()"/>
+                    
+                    <!--                     <input class="btn btn-inverse" type="button" value="取消" /></td> -->
+&nbsp&nbsp&nbsp&nbsp信息保存成功如页面信息未更新请点击刷新按钮。
+            </tr>
+        </tfoot>
+       
+    </form>
+      
+    </table>
+    </div>
+</body>
+</html>
